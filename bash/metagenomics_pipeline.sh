@@ -1,70 +1,133 @@
-# ls -la /work/natanastas/Merge/20250127 | awk '{print $9}' | awk -F "_L" '{print $1}' | sort | uniq > SampleList
-pathToFASTQFiles="/mnt/new_home/kate_mallou/Karolinska_RNASeq/"
+# ls -la ./ | awk '{print $9}' | awk -F "_R" '{print $1}' | sort | uniq > SampleList
+
+pathToFASTQFiles="./"
 
 
-# Create directories
 printf "mkdir qualityRaw\n"
 printf "mkdir trimmed\n"
+printf "mkdir trimmed/fastqc_trimmed\n"
 printf "mkdir bwa_output\n"
-printf "mkdir amrplusplus_results\n"
+printf "mkdir bwa_amr_output\n"
 printf "\n\n"
 
-# Load environment
-printf "source activate metagenomics_env"
+
+cat SampleList | while read line; do
+
+
+        printf "### Sample: "
+        printf $line
+        printf "  ### \n"
+
+	# Step 1: Quality check (FastQC)
+        printf "fastqc -t 4 "
+        printf $pathToFASTQFiles
+        printf $line
+        printf "_R1_001.fastq.gz "
+        printf $pathToFASTQFiles
+        printf $line
+        printf "_R2_001.fastq.gz "
+        printf " -o qualityRaw/"
+        printf "\n"
+
+        # Step 2: Trim adapters and low-quality bases (Trimmomatic)
+        printf "trimmomatic "
+        printf "PE -threads 4 "
+        printf $pathToFASTQFiles
+        printf $line
+        printf "_R1_001.fastq.gz "
+        printf $pathToFASTQFiles
+        printf $line
+        printf "_R2_001.fastq.gz "
+        printf "trimmed/"
+        printf $line
+        printf "_R1_paired.fastq.gz "
+        printf "trimmed/"
+        printf $line
+        printf "_R1_unpaired.fastq.gz "
+        printf "trimmed/"
+        printf $line
+        printf "_R2_paired.fastq.gz "
+        printf "trimmed/"
+        printf $line
+        printf "_R2_unpaired.fastq.gz "
+        printf "ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36"
+        printf "\n"
+
+	# Step 3: Quality check on trimmed (FastQC)
+	printf "fastqc -t 4 "
+        printf $pathToFASTQFiles
+	printf "trimmed/"
+        printf $line
+        printf "_R1_paired.fastq.gz "
+        printf $pathToFASTQFiles
+	printf "trimmed/"
+        printf $line
+        printf "_R2_paired.fastq.gz "
+        printf " -o trimmed/fastqc_trimmed/"
+        printf "\n"
+
+    	# Step 4: Host DNA removal (BWA mapping to bovine genome)
+	printf "bwa mem -t 4 /mnt/siarkou_a/groups/siarkou/Bos_taurus_genome/Bos_taurus.fna "
+	printf "./trimmed/"
+	printf $line
+	printf "_R1_paired.fastq.gz "
+	printf "./trimmed/"
+	printf $line
+	printf "_R2_paired.fastq.gz "
+	printf " > bwa_output/"
+	printf $line
+	printf ".sam"
+	printf "\n"
+
+	printf "samtools view -@ 4 -bS "
+	printf "bwa_output/"
+	printf $line
+	printf ".sam -o "
+	printf "bwa_output/"
+	printf $line
+	printf ".bam"
+	printf "\n"
+
+	printf "samtools flagstat "
+	printf "bwa_output/"
+	printf $line
+	printf ".bam > "
+	printf "bwa_output/"
+	printf $line
+	printf ".report.txt"
+	printf "\n"
+
+	printf "samtools view -@ 4 -b -f 12 -F 256 "
+	printf "bwa_output/"
+	printf $line
+	printf ".sam > bwa_output/"
+	printf $line
+	printf ".clean.bam"
+	printf "\n"
+
+	printf "samtools fastq -@ 4 "
+	printf "bwa_output/"
+	printf $line
+	printf ".clean.bam -1 bwa_output/"
+	printf $line
+	printf "_clean_R1.fastq -2 bwa_output/"
+	printf $line
+	printf "_clean_R2.fastq"
+	printf "\n"
+
+        printf "\n\n"
+
+done;
+
+
 printf "\n\n"
 
-# Loop through each sample
-cat $SampleList | while read line; do
-
-    printf "### $line ###\n"
-
-	# Step 1: Quality control (FastQC)
-	printf "fastqc \
-	-t $numberOfThreads \
-	$pathToFASTQFiles/$line*R1*.fastq.gz \
-	$pathToFASTQFiles/$line*R2*.fastq.gz \
-	-o ./quality/raw/ \
-	\n"
-
-	# Step 2: Trim adapters and low-quality bases (Trimmomatic)
-	printf "trimmomatic \
-	PE -threads 16 \
-	$pathToFASTQFiles/$line*R1*.fastq.gz \
-	$pathToFASTQFiles/$line*R2*.fastq.gz \
-	trimmed/$line*R1*paired.fastq.gz trimmed/$line*R1*unpaired.fastq.gz \
-	trimmed/$line*R2*paired.fastq.gz trimmed/$line*R2*unpaired.fastq.gz \
-	ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 \
-	LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 \
-	\n"
-
-    # Step 3: Host DNA removal (BWA mapping to bovine genome)
-	printf "bwa mem -t 16 /path/to/bos_taurus.fa \
-	trimmed/$line*R1*paired.fastq.gz \
-	trimmed/$line*R2*paired.fastq.gz > bwa_output/$line.sam
-	\n"
-
-	printf "samtools view 	  -@ 16 -bS $line.Aligned.out.sam -o $line.bam \n"
-	printf "samtools flagstat -@ 16 $line.bam > $line.report.txt \n"
-	printf "samtools view 	  -@ 16 -b -f 12 -F 256 bwa_output/$line.sam > bwa_output/$line.clean.bam \n"
-	printf "fastq 			  -@ 16 bwa_output/$line.clean.bam -1 bwa_output/$line*_clean_R1.fastq -2 bwa_output/$line*_clean_R2.fastq \n"
-
-	# Step 4: ARG mapping (BWA to MEGARes)
-	printf "bwa mem -t 16 /path/to/MEGARes_v1.01.fasta \
-	bwa_output/$line*clean_R1.fastq \
-	bwa_output/$line*clean_R2.fastq > bwa_output/$line.ARG.sam
-	\n"
-
-	printf "samtools view     -@ 16 -bS bwa_output/$line.ARG.sam -o bwa_output/$line.ARG.bam \n"
-	printf "samtools flagstat -@ 16 bwa_output/$line.ARG.bam > bwa_output/$line.ARG.report.txt \n"
-	printf "samtools view 	  -@ 16 -b -F 4 bwa_output/$line.ARG.bam -o bwa_output/$line.ARG.mapped.bam \n"
-	printf "samtools sort     -@ 16 bwa_output/$line.ARG.mapped.bam -o bwa_output/$line.ARG.mapped.sorted.bam \n"
-
-    # Step 5: Resistome profiling with AmrPlusPlus
-	printf "AmrPlusPlus -i bwa_output/${line}.ARG.mapped.sorted.bam -o amrplusplus_results/${line}/ \n"
-
-	printf "\n\n"
-
-done
-
-# Deactivate environment
-conda deactivate
+printf "featureCounts"
+printf " -a ./ΑMR/annotation/AMR_CDS_simplified.gff "
+printf " -T 16 "
+printf " -t gene "
+printf " -g gene_name "
+printf " -p"
+printf " -o amr-counts.txt "
+printf "./bwa_amr_output/*_amr.sorted.bam"
+printf "\n"
