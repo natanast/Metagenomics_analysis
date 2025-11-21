@@ -129,6 +129,33 @@ cat SampleList | while read line; do
         printf "_amr.sam"
         printf "\n"
 
+        printf "samtools view -@ 4 -bS "
+        printf "bwa_amr_output/"
+        printf $line
+        printf "_amr.sam -o "
+        printf "bwa_amr_output/"
+        printf $line
+        printf "_amr.bam"
+        printf "\n"
+
+        printf "samtools sort "
+        printf "bwa_amr_output/"
+        printf $line
+        printf "_amr.sam -o "
+        printf "bwa_amr_output/"
+        printf $line
+        printf "_amr.sorted.bam"
+        printf "\n"
+
+        printf "samtools flagstat "
+        printf "bwa_amr_output/"
+        printf $line
+        printf "_amr.sorted.bam > "
+        printf "bwa_amr_output/"
+        printf $line
+        printf "_amr.report.txt"
+        printf "\n"
+
 
         printf "\n\n"
 
@@ -137,12 +164,4 @@ done;
 
 printf "\n\n"
 
-printf "featureCounts"
-printf " -a ./ΑMR/annotation/AMR_CDS_simplified.gff "
-printf " -T 16 "
-printf " -t gene "
-printf " -g gene_name "
-printf " -p"
-printf " -o amr-counts.txt "
-printf "./bwa_amr_output/*_amr.sorted.bam"
-printf "\n"
+printf "### PIPELINE COMPLETE ###\n"
