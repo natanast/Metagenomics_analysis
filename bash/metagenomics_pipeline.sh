@@ -115,6 +115,21 @@ cat SampleList | while read line; do
 	printf "_clean_R2.fastq"
 	printf "\n"
 
+
+        # Step 5: align to AMR
+        printf "bwa mem -t 4 /mnt/siarkou_a/groups/siarkou/AMR/AMR_CDS.fa "
+        printf "./bwa_output/"
+        printf $line
+        printf "_clean_R1.fastq "
+        printf "./bwa_output/"
+        printf $line
+        printf "_clean_R2.fastq "
+        printf " > bwa_amr_output/"
+        printf $line
+        printf "_amr.sam"
+        printf "\n"
+
+
         printf "\n\n"
 
 done;
