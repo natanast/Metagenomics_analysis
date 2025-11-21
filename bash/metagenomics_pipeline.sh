@@ -13,21 +13,20 @@ printf "\n\n"
 
 cat SampleList | while read line; do
 
-
-        printf "### Sample: "
-        printf $line
-        printf "  ### \n"
+	printf "### Sample: "
+    printf $line
+    printf "  ### \n"
 
 	# Step 1: Quality check (FastQC)
-        printf "fastqc -t 4 "
-        printf $pathToFASTQFiles
-        printf $line
-        printf "_R1_001.fastq.gz "
-        printf $pathToFASTQFiles
-        printf $line
-        printf "_R2_001.fastq.gz "
-        printf " -o qualityRaw/"
-        printf "\n"
+	printf "fastqc -t 4 "
+    printf $pathToFASTQFiles
+	printf $line
+    printf "_R1_001.fastq.gz "
+	printf $pathToFASTQFiles
+    printf $line
+    printf "_R2_001.fastq.gz "
+    printf " -o qualityRaw/"
+    printf "\n"
 
         # Step 2: Trim adapters and low-quality bases (Trimmomatic)
         printf "trimmomatic "
