@@ -23,18 +23,17 @@ colnames(d) = d |>
 
 
 
-
-# keep only numeric counts (remove Geneid column)
 counts_matrix <- d[, -1, with = FALSE]  # all columns except first
 
 # convert to matrix
 counts_matrix <- as.matrix(counts_matrix)
 
-# transpose so rows = samples, columns = genes
+# transpose 
 counts_matrix_t <- t(counts_matrix)
 
 
 # rarefaction curves -----
+
 rarecurve(
     counts_matrix_t, 
     step = 100,          # increment of sample size
