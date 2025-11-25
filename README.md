@@ -1,4 +1,4 @@
 # Metagenomics_analysis
 
-A pipeline of Bash and R scripts for whole-metagenomic data analysis.
-This repository facilitates processing, quality control, taxonomic/functional profiling, and downstream analyses of shotgun metagenomic sequencing data.
+Scripts for whole metagenomic data analysis using Bash and R.
+This repository contains a collection of scripts for processing and downstream analysis of shotgun metagenomic sequencing data, from raw FASTQ files to visualisation and statistical results.
