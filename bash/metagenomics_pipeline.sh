@@ -163,16 +163,16 @@ done;
 
 printf "\n\n"
 
-printf "featureCounts"
-printf " -a ./ΑMR/annotation/AMR_CDS_simplified.gff "
-printf " -T 16 "
-printf " -t gene "
-printf " -g gene_name "
-printf " -p"
-printf " -o amr-counts.txt "
-printf "./bwa_amr_output/*_amr.sorted.bam"
-printf "\n"
 
 printf "\n\n"
 
-printf "### PIPELINE COMPLETE ###\n"
+printf "featureCounts "
+printf "-a ../AMR/megares/megares.gtf  "
+printf "-T 16 "
+printf "-t gene "
+printf "-g gene_name "
+printf "-p "
+printf "-o megares-counts.txt "
+printf "./bwa_megares/*_megares.sorted.bam"
+printf "\n"
+
