@@ -1,178 +1,176 @@
 # ls -la ./ | awk '{print $9}' | awk -F "_R" '{print $1}' | sort | uniq > SampleList
 
-pathToFASTQFiles="./"
+pathToFASTQFiles="./fastq_raw/"
 
 
-printf "mkdir qualityRaw\n"
-printf "mkdir trimmed\n"
-printf "mkdir trimmed/fastqc_trimmed\n"
-printf "mkdir bwa_output\n"
-printf "mkdir bwa_amr_output\n"
+printf "mkdir A_FastQC\n"
+printf "mkdir B_Trimmomatic\n"
+printf "mkdir C_FastQC_trimmed\n"
+printf "mkdir D_Host_clean\n"
+printf "mkdir E_BWA_MEGARes\n"
+printf "mkdir H_krakenk2_standard\n"
 printf "\n\n"
 
 
 cat SampleList | while read line; do
 
-        printf "### Sample: "
-        printf $line
-        printf "  ### \n"
+    printf "### Sample: "
+    printf $line
+   	printf "  ### \n"
 
-	# Step 1: Quality check (FastQC)
-	printf "fastqc -t 4 "
-        printf $pathToFASTQFiles
-	printf $line
-        printf "_R1_001.fastq.gz "
-	printf $pathToFASTQFiles
-        printf $line
-        printf "_R2_001.fastq.gz "
-        printf " -o qualityRaw/"
-        printf "\n"
+    # Step 1: Quality check (FastQC)
+    printf "fastqc -t 4 "
+    printf $pathToFASTQFiles
+    printf $line
+    printf "_R1_001.fastq.gz "
+    printf $pathToFASTQFiles
+    printf $line
+    printf "_R2_001.fastq.gz "
+    printf " -o A_FastQC/"
+    printf "\n"
 
-        # Step 2: Trim adapters and low-quality bases (Trimmomatic)
-        printf "trimmomatic "
-        printf "PE -threads 4 "
-        printf $pathToFASTQFiles
-        printf $line
-        printf "_R1_001.fastq.gz "
-        printf $pathToFASTQFiles
-        printf $line
-        printf "_R2_001.fastq.gz "
-        printf "trimmed/"
-        printf $line
-        printf "_R1_paired.fastq.gz "
-        printf "trimmed/"
-        printf $line
-        printf "_R1_unpaired.fastq.gz "
-        printf "trimmed/"
-        printf $line
-        printf "_R2_paired.fastq.gz "
-        printf "trimmed/"
-        printf $line
-        printf "_R2_unpaired.fastq.gz "
-        printf "ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36"
-        printf "\n"
+    # Step 2: Trim adapters and low-quality bases (Trimmomatic)
+    printf "trimmomatic "
+    printf "PE -threads 4 "
+    printf $pathToFASTQFiles
+    printf $line
+    printf "_R1_001.fastq.gz "
+    printf $pathToFASTQFiles
+    printf $line
+    printf "_R2_001.fastq.gz "
+    printf "B_Trimmomatic/"
+    printf $line
+    printf "_R1_paired.fastq.gz "
+    printf "B_Trimmomatic/"
+    printf $line
+    printf "_R1_unpaired.fastq.gz "
+    printf "B_Trimmomatic/"
+    printf $line
+    printf "_R2_paired.fastq.gz "
+    printf "B_Trimmomatic/"
+    printf $line
+    printf "_R2_unpaired.fastq.gz "
+    printf "ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36"
+   	printf "\n"
 
 	# Step 3: Quality check on trimmed (FastQC)
 	printf "fastqc -t 4 "
-        printf $pathToFASTQFiles
-	printf "trimmed/"
-        printf $line
-        printf "_R1_paired.fastq.gz "
-        printf $pathToFASTQFiles
-	printf "trimmed/"
-        printf $line
-        printf "_R2_paired.fastq.gz "
-        printf " -o trimmed/fastqc_trimmed/"
-        printf "\n"
-
-    	# Step 4: Host DNA removal (BWA mapping to bovine genome)
-	printf "bwa mem -t 4 /mnt/siarkou_a/groups/siarkou/Bos_taurus_genome/Bos_taurus.fna "
-	printf "./trimmed/"
+	printf "./B_Trimmomatic/"
 	printf $line
 	printf "_R1_paired.fastq.gz "
-	printf "./trimmed/"
+	printf "./B_Trimmomatic/"
 	printf $line
 	printf "_R2_paired.fastq.gz "
-	printf " > bwa_output/"
+	printf " -o C_FastQC_trimmed/"
+	printf "\n"
+
+	# Step 4: Host DNA removal (BWA mapping to bovine genome)
+	printf "bwa mem -t 4 /mnt/siarkou_a/groups/siarkou/Bos_taurus_genome/Bos_taurus.fna "
+	printf "./B_Trimmomatic/"
+	printf $line
+	printf "_R1_paired.fastq.gz "
+	printf "./B_Trimmomatic/"
+	printf $line
+	printf "_R2_paired.fastq.gz "
+	printf " > D_Host_clean/"
 	printf $line
 	printf ".sam"
 	printf "\n"
 
 	printf "samtools view -@ 4 -bS "
-	printf "bwa_output/"
+	printf "D_Host_clean/"
 	printf $line
 	printf ".sam -o "
-	printf "bwa_output/"
+	printf "D_Host_clean/"
 	printf $line
 	printf ".bam"
 	printf "\n"
 
 	printf "samtools flagstat "
-	printf "bwa_output/"
+	printf "D_Host_clean/"
 	printf $line
 	printf ".bam > "
-	printf "bwa_output/"
+	printf "D_Host_clean/"
 	printf $line
 	printf ".report.txt"
 	printf "\n"
 
 	printf "samtools view -@ 4 -b -f 12 -F 256 "
-	printf "bwa_output/"
+	printf "D_Host_clean/"
 	printf $line
-	printf ".sam > bwa_output/"
+	printf ".sam > D_Host_clean/"
 	printf $line
 	printf ".clean.bam"
 	printf "\n"
 
-	printf "samtools fastq -@ 4 "
-	printf "bwa_output/"
+	printf "samtools fastq "
+	printf "D_Host_clean/"
 	printf $line
-	printf ".clean.bam -1 bwa_output/"
+	printf ".clean.bam -1 D_Host_clean/"
 	printf $line
-	printf "_clean_R1.fastq -2 bwa_output/"
+	printf "_clean_R1.fastq -2 D_Host_clean/"
 	printf $line
 	printf "_clean_R2.fastq"
 	printf "\n"
 
+	printf "rm "
+	printf "D_Host_clean/"
+	printf $line
+	printf ".sam"
+	printf "\n"
 
-        # Step 5: align to AMR
-        printf "bwa mem -t 4 /mnt/siarkou_a/groups/siarkou/AMR/AMR_CDS.fa "
-        printf "./bwa_output/"
-        printf $line
-        printf "_clean_R1.fastq "
-        printf "./bwa_output/"
-        printf $line
-        printf "_clean_R2.fastq "
-        printf " > bwa_amr_output/"
-        printf $line
-        printf "_amr.sam"
-        printf "\n"
+	printf "rm "
+	printf "D_Host_clean/"
+	printf $line
+	printf ".bam"
+	printf "\n"
 
-        printf "samtools view -@ 4 -bS "
-        printf "bwa_amr_output/"
-        printf $line
-        printf "_amr.sam -o "
-        printf "bwa_amr_output/"
-        printf $line
-        printf "_amr.bam"
-        printf "\n"
+	# Step 5: align to AMR
+    printf "bwa mem -t 4 /mnt/siarkou_a/groups/siarkou/AMR/megares/megares.fasta "
+    printf "./D_Host_clean/"
+    printf $line
+    printf "_clean_R1.fastq "
+    printf "./D_Host_clean/"
+    printf $line
+    printf "_clean_R2.fastq "
+    printf " > E_BWA_MEGARes/"
+    printf $line
+    printf "_amr.sam"
+    printf "\n"
 
-        printf "samtools sort "
-        printf "bwa_amr_output/"
-        printf $line
-        printf "_amr.sam -o "
-        printf "bwa_amr_output/"
-        printf $line
-        printf "_amr.sorted.bam"
-        printf "\n"
+    printf "samtools sort "
+    printf "E_BWA_MEGARes/"
+    printf $line
+    printf "_amr.sam -o "
+    printf "E_BWA_MEGARes/"
+    printf $line
+    printf "_amr.sorted.bam"
+    printf "\n"
 
-        printf "samtools flagstat "
-        printf "bwa_amr_output/"
-        printf $line
-        printf "_amr.sorted.bam > "
-        printf "bwa_amr_output/"
-        printf $line
-        printf "_amr.report.txt"
-        printf "\n"
+    printf "samtools flagstat "
+    printf "E_BWA_MEGARes/"
+    printf $line
+    printf "_amr.sorted.bam > "
+    printf "E_BWA_MEGARes/"
+    printf $line
+    printf "_amr.megares.report.txt"
+    printf "\n"
 
+   	printf "samtools index "
+    printf "./E_BWA_MEGARes/"
+   	printf $line
+	printf "_amr.sorted.bam"
+	printf "\n"
 
-        printf "\n\n"
+    printf "rm "
+    printf "E_BWA_MEGARes/"
+    printf $line
+    printf "_amr.sam"
+    printf "\n"
+
+	printf "\n\n"
 
 done;
 
-
-printf "\n\n"
-
-
-printf "\n\n"
-
-printf "featureCounts "
-printf "-a ../AMR/megares/megares.gtf  "
-printf "-T 16 "
-printf "-t gene "
-printf "-g gene_name "
-printf "-p "
-printf "-o megares-counts.txt "
-printf "./bwa_megares/*_megares.sorted.bam"
+printf "featureCounts -a /mnt/siarkou_a/groups/siarkou/AMR/megares -T 16 -t gene -g gene_name -p -o megares-counts.txt ./E_BWA_MEGARes/*_amr.sorted.bam"
 printf "\n"
-
