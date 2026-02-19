@@ -13,9 +13,8 @@ library(dplyr)
 
 # load data ---------
 
-coverage_dir <- "coverage_per_sample_poolB/"
+coverage_dir <- "coverage_per_assemblied_sample/"
 coverage_files <- list.files(coverage_dir, pattern="_coverage.txt$", full.names=TRUE)
-
 
 
 # clean data -----
@@ -24,7 +23,8 @@ d <- list()
 
 for(f in coverage_files){
     
-    sample <- f |> basename() |> str_remove_all("_L002_amr|sorted_coverage|txt|\\.")
+    # sample <- f |> basename() |> str_remove_all("_coverage|txt|\\.")
+    sample <- f |> basename() |> str_remove_all("_coverage|txt|_amr.sorted_coverage\\.")
         
     df <- f |> fread()
     
@@ -56,4 +56,4 @@ d_wide <- dcast(
 
 
 
-writexl::write_xlsx(d_wide, "coverage_poolB.xlsx")
+writexl::write_xlsx(d_wide, "coverage.xlsx")
