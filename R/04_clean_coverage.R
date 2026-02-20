@@ -13,7 +13,7 @@ library(dplyr)
 
 # load data ---------
 
-coverage_dir <- "coverage_per_assemblied_sample/"
+coverage_dir <- "coverage_per_sample/"
 coverage_files <- list.files(coverage_dir, pattern="_coverage.txt$", full.names=TRUE)
 
 
