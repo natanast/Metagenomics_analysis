@@ -129,10 +129,10 @@ cat SampleList | while read line; do
     printf "bwa mem -t 4 /mnt/siarkou_a/groups/siarkou/AMR/megares/megares.fasta "
     printf "./D_Host_clean/"
     printf $line
-    printf "_clean_R1.fastq "
+    printf "_clean_R1.fastq.gz "
     printf "./D_Host_clean/"
     printf $line
-    printf "_clean_R2.fastq "
+    printf "_clean_R2.fastq.gz "
     printf " > E_BWA_MEGARes/"
     printf $line
     printf "_amr.sam"
