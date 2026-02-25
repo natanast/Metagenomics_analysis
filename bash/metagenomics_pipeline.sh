@@ -108,9 +108,9 @@ cat SampleList | while read line; do
 	printf $line
 	printf ".clean.bam -1 D_Host_clean/"
 	printf $line
-	printf "_clean_R1.fastq -2 D_Host_clean/"
+	printf "_clean_R1.fastq.gz -2 D_Host_clean/"
 	printf $line
-	printf "_clean_R2.fastq"
+	printf "_clean_R2.fastq.gz"
 	printf "\n"
 
 	printf "rm "
