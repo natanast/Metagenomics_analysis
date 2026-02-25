@@ -19,7 +19,7 @@ cat SampleList | while read line; do
    	printf "  ### \n"
 
     # Step 1: Quality check (FastQC)
-    printf "fastqc -t 4 "
+    printf "fastqc -t 4 --memory 10000 "
     printf $pathToFASTQFiles
     printf $line
     printf "_R1_001.fastq.gz "
@@ -54,7 +54,7 @@ cat SampleList | while read line; do
    	printf "\n"
 
 	# Step 3: Quality check on trimmed (FastQC)
-	printf "fastqc -t 4 "
+	printf "fastqc -t 4 --memory 10000 "
 	printf "./B_Trimmomatic/"
 	printf $line
 	printf "_R1_paired.fastq.gz "
