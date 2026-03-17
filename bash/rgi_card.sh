@@ -1,6 +1,5 @@
 # ls -la ./ | awk '{print $9}' | awk -F "_R" '{print $1}' | sort | uniq > SampleList
-rgi bwt   -1 bwa_output/A_A1-20_S2_L001_clean_R1.fastq.gz   -2 bwa_output/A_A1-20_S2_L001_clean_R2.fastq.gz   
--a kma   -o rgi_output/A_A1-20_S2   --local   --threads 24   --include_other_models   --include_wildcard   --coverage 80
+# rgi bwt   -1 bwa_output/A_A1-20_S2_L001_clean_R1.fastq.gz   -2 bwa_output/A_A1-20_S2_L001_clean_R2.fastq.gz  -a kma   -o rgi_output/A_A1-20_S2   --local   --threads 24   --include_other_models   --include_wildcard   --coverage 80
 
 
 
