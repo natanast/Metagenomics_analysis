@@ -172,5 +172,5 @@ cat SampleList | while read line; do
 
 done;
 
-printf "featureCounts -a /mnt/siarkou_a/groups/siarkou/AMR/megares -T 16 -t gene -g gene_name -p -o megares-counts.txt ./E_BWA_MEGARes/*_amr.sorted.bam"
+printf "featureCounts -a /mnt/siarkou_a/groups/siarkou/AMR/megares/megares.gtf -T 16 -t gene -g gene_name -p -o megares-counts.txt ./E_BWA_MEGARes/*_amr.sorted.bam"
 printf "\n"
