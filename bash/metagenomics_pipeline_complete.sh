@@ -7,7 +7,6 @@ printf "mkdir A_FastQC\n"
 printf "mkdir B_Trimmomatic\n"
 printf "mkdir C_FastQC_trimmed\n"
 printf "mkdir D_Host_clean\n"
-printf "mkdir E_BWA_MEGARes\n"
 printf "mkdir H_krakenk2_standard\n"
 printf "\n\n"
 
