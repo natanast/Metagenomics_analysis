@@ -106,11 +106,18 @@ cat SampleList | while read line; do
 	printf "samtools fastq "
 	printf "D_Host_clean/"
 	printf $line
-	printf ".clean.bam -1 D_Host_clean/"
+	printf ".clean.qsort.bam -1 D_Host_clean/"
 	printf $line
-	printf "_clean_R1.fastq.gz -2 D_Host_clean/"
+	printf "_clean_R1.fastq -2 D_Host_clean/"
 	printf $line
-	printf "_clean_R2.fastq.gz"
+	printf "_clean_R2.fastq -0 /dev/null -s /dev/null -n"
+	printf "\n"
+
+	printf "gzip -f D_Host_clean/"
+	printf $line
+	printf "_clean_R1.fastq D_Host_clean/"
+	printf $line
+	printf "_clean_R2.fastq"
 	printf "\n"
 
 	printf "rm "
