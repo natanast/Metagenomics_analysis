@@ -103,6 +103,13 @@ cat SampleList | while read line; do
 	printf ".clean.bam"
 	printf "\n"
 
+	printf "samtools sort -n -@ 4 D_Host_clean/"
+	printf $line
+	printf ".clean.bam -o D_Host_clean/"
+	printf $line
+	printf ".clean.qsort.bam"
+	printf "\n"
+
 	printf "samtools fastq "
 	printf "D_Host_clean/"
 	printf $line
