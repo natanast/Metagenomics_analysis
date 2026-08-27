@@ -8,6 +8,7 @@ printf "mkdir B_Trimmomatic\n"
 printf "mkdir C_FastQC_trimmed\n"
 printf "mkdir D_Host_clean\n"
 printf "mkdir H_krakenk2_standard\n"
+printf "mkdir kraken2_16_output\n"
 printf "\n\n"
 
 
