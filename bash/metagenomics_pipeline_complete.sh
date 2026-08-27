@@ -166,6 +166,11 @@ cat SampleList | while read line; do
 	printf ".breport -r 150 -l S -t 10"
 	printf "\n"
 
+	printf "rm kraken2_16_output/"
+	printf $line
+	printf ".out"
+	printf "\n"
+
 	printf "\n\n"
 
 done;
