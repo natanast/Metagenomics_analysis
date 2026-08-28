@@ -19,7 +19,7 @@ cat SampleList | while read line; do
    	printf "  ### \n"
 
     # Step 1: Quality check (FastQC)
-    printf "fastqc -t 4 --memory 10000 "
+    printf "fastqc -t 16 --memory 10000 "
     printf $pathToFASTQFiles
     printf $line
     printf "_R1_001.fastq.gz "
@@ -31,7 +31,7 @@ cat SampleList | while read line; do
 
     # Step 2: Trim adapters and low-quality bases (Trimmomatic)
     printf "trimmomatic "
-    printf "PE -threads 4 "
+    printf "PE -threads 16 "
     printf $pathToFASTQFiles
     printf $line
     printf "_R1_001.fastq.gz "
@@ -54,7 +54,7 @@ cat SampleList | while read line; do
    	printf "\n"
 
 	# Step 3: Quality check on trimmed (FastQC)
-	printf "fastqc -t 4 --memory 10000 "
+	printf "fastqc -t 16 --memory 10000 "
 	printf "./B_Trimmomatic/"
 	printf $line
 	printf "_R1_paired.fastq.gz "
@@ -65,7 +65,7 @@ cat SampleList | while read line; do
 	printf "\n"
 
 	# Step 4: Host DNA removal (BWA mapping to bovine genome)
-	printf "bwa mem -t 4 /mnt/siarkou_a/groups/siarkou/Bos_taurus_genome/Bos_taurus.fna "
+	printf "bwa mem -t 16 /mnt/siarkou_a/groups/siarkou/Bos_taurus_genome/Bos_taurus.fna "
 	printf "./B_Trimmomatic/"
 	printf $line
 	printf "_R1_paired.fastq.gz "
@@ -77,7 +77,7 @@ cat SampleList | while read line; do
 	printf ".sam"
 	printf "\n"
 
-	printf "samtools view -@ 4 -bS "
+	printf "samtools view -@ 16 -bS "
 	printf "D_Host_clean/"
 	printf $line
 	printf ".sam -o "
@@ -95,7 +95,7 @@ cat SampleList | while read line; do
 	printf ".report.txt"
 	printf "\n"
 
-	printf "samtools view -@ 4 -b -f 12 -F 256 "
+	printf "samtools view -@ 16 -b -f 12 -F 256 "
 	printf "D_Host_clean/"
 	printf $line
 	printf ".sam > D_Host_clean/"
@@ -103,7 +103,7 @@ cat SampleList | while read line; do
 	printf ".clean.bam"
 	printf "\n"
 
-	printf "samtools sort -n -@ 4 D_Host_clean/"
+	printf "samtools sort -n -@ 16 D_Host_clean/"
 	printf $line
 	printf ".clean.bam -o D_Host_clean/"
 	printf $line
@@ -141,7 +141,7 @@ cat SampleList | while read line; do
 
 	# Step 5: kraken2 analysis    
 	printf "kraken2 --db /mnt/siarkou_a/groups/siarkou/kraken2_db_standard_16/"
-	printf " --threads 32 --paired --gzip-compressed --confidence 0.1 --minimum-hit-groups 3"
+	printf " --threads 16 --paired --gzip-compressed --confidence 0.1 --minimum-hit-groups 3"
 	printf " --report kraken2_16_output/"
 	printf $line
 	printf ".report"
