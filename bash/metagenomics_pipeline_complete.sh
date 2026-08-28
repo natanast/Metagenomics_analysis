@@ -133,19 +133,19 @@ cat SampleList | while read line; do
 	printf ".sam"
 	printf "\n"
 
-	printf "rm "
-	printf "D_Host_clean/"
-	printf $line
-	printf ".bam"
-	printf "\n"
+#	printf "rm "
+#	printf "D_Host_clean/"
+#	printf $line
+#	printf ".bam"
+#	printf "\n"
 
-	# Step 5: kraken2 analysis    
+	# Step 5: kraken2 - bracken analysis    
 	printf "kraken2 --db /work_2/natanastas/ARENA/db/k2_standard_08/"
 	printf " --threads 16 --paired --gzip-compressed --confidence 0.1 --minimum-hit-groups 3"
-	printf " --report kraken2_16_output/"
+	printf " --report kraken2_08_output/"
 	printf $line
 	printf ".report"
-	printf " --output kraken2_16_output/"
+	printf " --output kraken2_08_output/"
 	printf $line
 	printf ".out "
 	printf " D_Host_clean/"
@@ -156,7 +156,7 @@ cat SampleList | while read line; do
     printf "\n"
 
 	printf "bracken -d /work_2/natanastas/ARENA/db/k2_standard_08/"
-	printf " -i kraken2_16_output/"
+	printf " -i kraken2_08_output/"
 	printf $line
 	printf ".report -o bracken_output/"
 	printf $line
@@ -165,10 +165,10 @@ cat SampleList | while read line; do
 	printf ".breport -r 150 -l S -t 10"
 	printf "\n"
 
-	printf "rm kraken2_16_output/"
-	printf $line
-	printf ".out"
-	printf "\n"
+#	printf "rm kraken2_08_output/"
+#	printf $line
+#	printf ".out"
+#	printf "\n"
 
 	printf "\n\n"
 
