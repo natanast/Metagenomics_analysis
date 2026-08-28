@@ -140,7 +140,7 @@ cat SampleList | while read line; do
 	printf "\n"
 
 	# Step 5: kraken2 analysis    
-	printf "kraken2 --db /mnt/siarkou_a/groups/siarkou/kraken2_db_standard_16/"
+	printf "kraken2 --db /work_2/natanastas/ARENA/db/k2_standard_08/"
 	printf " --threads 16 --paired --gzip-compressed --confidence 0.1 --minimum-hit-groups 3"
 	printf " --report kraken2_16_output/"
 	printf $line
@@ -155,7 +155,7 @@ cat SampleList | while read line; do
 	printf "_clean_R2.fastq.gz"
     printf "\n"
 
-	printf "bracken -d /mnt/siarkou_a/groups/siarkou/kraken2_db_standard_16/"
+	printf "bracken -d /work_2/natanastas/ARENA/db/k2_standard_08/"
 	printf " -i kraken2_16_output/"
 	printf $line
 	printf ".report -o bracken_output/"
