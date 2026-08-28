@@ -65,7 +65,7 @@ cat SampleList | while read line; do
 	printf "\n"
 
 	# Step 4: Host DNA removal (BWA mapping to bovine genome)
-	printf "bwa mem -t 16 /mnt/siarkou_a/groups/siarkou/Bos_taurus_genome/Bos_taurus.fna "
+	printf "bwa mem -t 16 /work_2/natanastas/ARENA/Bos_taurus_genome/Bos_taurus.fna "
 	printf "./B_Trimmomatic/"
 	printf $line
 	printf "_R1_paired.fastq.gz "
@@ -173,3 +173,5 @@ cat SampleList | while read line; do
 	printf "\n\n"
 
 done;
+
+printf "combine_bracken_outputs.py --files bracken_output/*.bracken -o abundance_table_species.tsv\n"
