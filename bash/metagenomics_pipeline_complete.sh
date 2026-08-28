@@ -7,7 +7,7 @@ printf "mkdir A_FastQC\n"
 printf "mkdir B_Trimmomatic\n"
 printf "mkdir C_FastQC_trimmed\n"
 printf "mkdir D_Host_clean\n"
-printf "mkdir kraken2_16_output\n"
+printf "mkdir kraken2_08_output\n"
 printf "mkdir bracken_output\n"
 printf "\n\n"
 
