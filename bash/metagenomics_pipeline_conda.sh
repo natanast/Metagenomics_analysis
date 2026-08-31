@@ -111,7 +111,7 @@ cat SampleList | while read line; do
 
 
 
-printf "conda polypolish"
+printf "conda activate polypolish"
 printf "\n\n"
 
 cat SampleList | while read line; do
