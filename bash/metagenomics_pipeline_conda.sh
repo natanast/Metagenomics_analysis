@@ -11,6 +11,10 @@ printf "mkdir kraken2_08_output\n"
 printf "mkdir bracken_output\n"
 printf "\n\n"
 
+
+printf "conda activate fastqc_v0.12.1"
+printf "\n\n"
+
 cat SampleList | while read line; do
 
 	printf "### Sample: "
@@ -35,37 +39,14 @@ cat SampleList | while read line; do
  printf "\n\n"
 
 
+printf "conda activate fastqc_v0.12.1"
+printf "\n\n"
 
 cat SampleList | while read line; do
 
 	printf "### Sample: "
     printf $line
    	printf "  ### \n"
-
-    # Step 1: Quality check (FastQC)
-    printf "fastqc -t 16 --memory 10000 "
-    printf $pathToFASTQFiles
-    printf $line
-    printf "_R1_001.fastq.gz "
-    printf $pathToFASTQFiles
-    printf $line
-    printf "_R2_001.fastq.gz "
-    printf " -o A_FastQC/"
-    printf "\n"
-
- 	printf "\n"
- done;
-
- printf "conda deactivate"
- printf "\n\n"
-
-
-cat SampleList | while read line; do
-
-    printf "### Sample: "
-    printf $line
-   	printf "  ### \n"
-
 
     # Step 2: Trim adapters and low-quality bases (Trimmomatic)
     printf "trimmomatic "
@@ -91,6 +72,24 @@ cat SampleList | while read line; do
     printf "ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36"
    	printf "\n"
 
+ 	printf "\n"
+ done;
+
+ printf "conda deactivate"
+ printf "\n\n"
+
+
+
+
+printf "conda activate fastqc_v0.12.1"
+printf "\n\n"
+
+cat SampleList | while read line; do
+
+	printf "### Sample: "
+    printf $line
+   	printf "  ### \n"
+    
 	# Step 3: Quality check on trimmed (FastQC)
 	printf "fastqc -t 16 --memory 10000 "
 	printf "./B_Trimmomatic/"
@@ -101,6 +100,59 @@ cat SampleList | while read line; do
 	printf "_R2_paired.fastq.gz "
 	printf " -o C_FastQC_trimmed/"
 	printf "\n"
+
+ 	printf "\n"
+ done;
+
+ printf "conda deactivate"
+ printf "\n\n"
+
+
+printf "conda activate fastqc_v0.12.1"
+printf "\n\n"
+
+
+
+
+printf "conda activate fastqc_v0.12.1"
+printf "\n\n"
+
+cat SampleList | while read line; do
+
+	printf "### Sample: "
+    printf $line
+   	printf "  ### \n"
+    
+	# Step 4: Host DNA removal (BWA mapping to bovine genome)
+	printf "bwa mem -t 16 /work_2/natanastas/ARENA/Bos_taurus_genome/Bos_taurus.fna "
+	printf "./B_Trimmomatic/"
+	printf $line
+	printf "_R1_paired.fastq.gz "
+	printf "./B_Trimmomatic/"
+	printf $line
+	printf "_R2_paired.fastq.gz "
+	printf " > D_Host_clean/"
+	printf $line
+	printf ".sam"
+	printf "\n"
+
+ 	printf "\n"
+ done;
+
+ printf "conda deactivate"
+ printf "\n\n"
+
+
+
+
+cat SampleList | while read line; do
+
+    printf "### Sample: "
+    printf $line
+   	printf "  ### \n"
+
+
+
 
 	# Step 4: Host DNA removal (BWA mapping to bovine genome)
 	printf "bwa mem -t 16 /work_2/natanastas/ARENA/Bos_taurus_genome/Bos_taurus.fna "
