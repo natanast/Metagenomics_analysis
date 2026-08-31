@@ -69,7 +69,7 @@ cat SampleList | while read line; do
     printf "B_Trimmomatic/"
     printf $line
     printf "_R2_unpaired.fastq.gz "
-    printf "ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36"
+    printf "ILLUMINACLIP:$ADAPTERS/NexteraPE-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36"
    	printf "\n"
 
  	printf "\n"
@@ -216,8 +216,6 @@ cat SampleList | while read line; do
 
  printf "conda deactivate"
  printf "\n\n"
-
-
 
 
 printf "conda activate bracken"
