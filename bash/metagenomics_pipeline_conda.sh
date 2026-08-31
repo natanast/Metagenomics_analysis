@@ -39,7 +39,7 @@ cat SampleList | while read line; do
  printf "\n\n"
 
 
-printf "conda activate fastqc_v0.12.1"
+printf "conda activate star-fusion_v1.14"
 printf "\n\n"
 
 cat SampleList | while read line; do
@@ -108,13 +108,8 @@ cat SampleList | while read line; do
  printf "\n\n"
 
 
-printf "conda activate fastqc_v0.12.1"
-printf "\n\n"
 
-
-
-
-printf "conda activate fastqc_v0.12.1"
+printf "conda polypolish"
 printf "\n\n"
 
 cat SampleList | while read line; do
@@ -144,7 +139,7 @@ cat SampleList | while read line; do
 
 
 
-printf "conda activate fastqc_v0.12.1"
+printf "conda activate samtools_v1.22.1"
 printf "\n\n"
 
 cat SampleList | while read line; do
@@ -225,7 +220,7 @@ cat SampleList | while read line; do
 
 
 
-printf "conda activate fastqc_v0.12.1"
+printf "conda activate bracken"
 printf "\n\n"
 
 cat SampleList | while read line; do
