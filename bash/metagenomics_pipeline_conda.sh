@@ -144,29 +144,15 @@ cat SampleList | while read line; do
 
 
 
+printf "conda activate fastqc_v0.12.1"
+printf "\n\n"
 
 cat SampleList | while read line; do
 
-    printf "### Sample: "
+	printf "### Sample: "
     printf $line
    	printf "  ### \n"
-
-
-
-
-	# Step 4: Host DNA removal (BWA mapping to bovine genome)
-	printf "bwa mem -t 16 /work_2/natanastas/ARENA/Bos_taurus_genome/Bos_taurus.fna "
-	printf "./B_Trimmomatic/"
-	printf $line
-	printf "_R1_paired.fastq.gz "
-	printf "./B_Trimmomatic/"
-	printf $line
-	printf "_R2_paired.fastq.gz "
-	printf " > D_Host_clean/"
-	printf $line
-	printf ".sam"
-	printf "\n"
-
+    
 	printf "samtools view -@ 16 -bS "
 	printf "D_Host_clean/"
 	printf $line
@@ -223,12 +209,31 @@ cat SampleList | while read line; do
 	printf ".sam"
 	printf "\n"
 
+	
 #	printf "rm "
 #	printf "D_Host_clean/"
 #	printf $line
 #	printf ".bam"
 #	printf "\n"
 
+ 	printf "\n"
+ done;
+
+ printf "conda deactivate"
+ printf "\n\n"
+
+
+
+
+printf "conda activate fastqc_v0.12.1"
+printf "\n\n"
+
+cat SampleList | while read line; do
+
+	printf "### Sample: "
+    printf $line
+   	printf "  ### \n"
+    
 	# Step 5: kraken2 - bracken analysis    
 	printf "kraken2 --db /work_2/natanastas/ARENA/db/k2_standard_08/"
 	printf " --threads 16 --paired --gzip-compressed --confidence 0.1 --minimum-hit-groups 3"
@@ -260,8 +265,10 @@ cat SampleList | while read line; do
 #	printf ".out"
 #	printf "\n"
 
-	printf "\n\n"
-
-done;
+ 	printf "\n"
+ done;
 
 printf "combine_bracken_outputs.py --files bracken_output/*.bracken -o abundance_table_species.tsv\n"
+
+ printf "conda deactivate"
+ printf "\n\n"
