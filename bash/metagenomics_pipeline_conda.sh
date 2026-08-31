@@ -1,7 +1,7 @@
 # ls -la ./ | awk '{print $9}' | awk -F "_R" '{print $1}' | sort | uniq > SampleList
 
 pathToFASTQFiles="./fastq_raw/"
-
+ADAPTERS=/apps/miniconda3/envs/star-fusion_v1.14/share/trimmomatic-0.39-2/adapters
 
 printf "mkdir A_FastQC\n"
 printf "mkdir B_Trimmomatic\n"
