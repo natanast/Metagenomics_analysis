@@ -43,6 +43,13 @@ mat <- t(d)
 
 # alpha diversity -----
 
+# Within-sample diversity: how many taxa are present and how evenly
+# they are distributed.
+#   observed = number of species
+#   shannon  = richness combined with evenness
+#   simpson  = probability that two random reads belong to different species
+#   evenness = evenness independent of richness (Pielou's J)
+
 alpha <- data.table(
     Sample   = rownames(mat),
     depth    = rowSums(mat),
@@ -57,6 +64,16 @@ alpha[, evenness := shannon / log(observed)]
 alpha <- merge(alpha, d2, by = "Sample")
 
 alpha[, observed := as.numeric(observed)]   
+
+
+# statistical testing -----
+
+# Kruskal-Wallis (non-parametric): do the groups differ?
+# Used instead of ANOVA because with n = 4 per group normality
+# cannot be assessed.
+
+kruskal.test(shannon  ~ factor(Group), data = alpha)
+kruskal.test(observed ~ factor(Group), data = alpha)
 
 
 # plot ------
