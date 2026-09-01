@@ -39,3 +39,18 @@ rownames(mat) <- d1$name
 
 
 mat <- t(d)
+
+# alpha diversity -----
+
+alpha <- data.table(
+    Sample   = rownames(mat),
+    depth    = rowSums(mat),
+    observed = specnumber(mat),
+    shannon  = diversity(mat, index = "shannon"),
+    simpson  = diversity(mat, index = "simpson")
+)
+
+
+alpha[, evenness := shannon / log(observed)]
+
+alpha <- merge(alpha, d2, by = "Sample")
