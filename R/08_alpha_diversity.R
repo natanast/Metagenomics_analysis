@@ -76,6 +76,30 @@ kruskal.test(shannon  ~ factor(Group), data = alpha)
 kruskal.test(observed ~ factor(Group), data = alpha)
 
 
+# sequencing depth control -----
+
+# Richness depends on the number of reads per sample. The correlation
+# is checked first, then the analysis is repeated after rarefying all
+# samples to a common depth, to rule out a technical artefact.
+
+cor.test(alpha$depth, alpha$observed, method = "spearman")
+
+
+mat_rare <- rrarefy(mat, min(rowSums(mat)))
+
+alpha_rare <- data.table(
+    Sample   = rownames(mat_rare),
+    observed = specnumber(mat_rare),
+    shannon  = diversity(mat_rare, index = "shannon")
+)
+alpha_rare <- merge(alpha_rare, d2, by = "Sample")
+
+kruskal.test(shannon  ~ factor(Group), data = alpha_rare)
+kruskal.test(observed ~ factor(Group), data = alpha_rare)
+
+
+fwrite(alpha, "alpha_diversity.csv")
+
 # plot ------
 
 library(ggplot2)
