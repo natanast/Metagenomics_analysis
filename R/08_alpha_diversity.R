@@ -106,16 +106,37 @@ alpha_long <- melt(alpha,
 
 
 gr <- ggplot(alpha_long, aes(Group, value, fill = Group)) +
-    geom_boxplot(alpha = 0.5, outlier.shape = NA) +
-    geom_jitter(width = 0.15, size = 2.5) +
+    
+    geom_boxplot(alpha = 0.85, outlier.shape = NA) +
+    
+    geom_point(
+        aes(fill = Group),
+        position = position_jitternormal(sd_y = 0, sd_x = .08),
+        shape = 21, size = 4, stroke = .25, color = "black"
+    ) +
+    
     # stat_compare_means(method = "kruskal.test", size = 2, label.y.npc = .99) +
+    
+    scale_fill_manual(values = paletteer_d("ggthemes::Color_Blind")) +
+    
     facet_wrap(~ index, scales = "free_y") +
+    
     labs(x = NULL, y = NULL) +
-    theme_bw() +
-    theme(legend.position = "none")
+    
+    theme_minimal() +
+    
+    theme(
+        legend.position = "none", 
+        
+        panel.border = element_rect(fill = NA, linewidth = .4),
+        panel.grid.major = element_line(linewidth = .55),
+        panel.grid.minor = element_line(linewidth = .45, linetype = "dashed"),
+        
+        plot.background = element_rect(fill = "transparent", color = NA),
+        plot.margin = margin(20, 20, 20, 20)
+    )
 
 ggsave(
     plot = gr, filename = "alpha_diversity.png",
     width = 10, height = 10, units = "in", dpi = 600
 )
-
