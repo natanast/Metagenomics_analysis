@@ -112,7 +112,7 @@ alpha_long <- melt(alpha,
                    value.name    = "value")
 
 
-ggplot(alpha_long, aes(Group, value, fill = Group)) +
+gr <- ggplot(alpha_long, aes(Group, value, fill = Group)) +
     geom_boxplot(alpha = 0.5, outlier.shape = NA) +
     geom_jitter(width = 0.15, size = 2.5) +
     # stat_compare_means(method = "kruskal.test", size = 2, label.y.npc = .99) +
@@ -120,4 +120,9 @@ ggplot(alpha_long, aes(Group, value, fill = Group)) +
     labs(x = NULL, y = NULL) +
     theme_bw() +
     theme(legend.position = "none")
+
+ggsave(
+    plot = gr, filename = "alpha_diversity.png",
+    width = 10, height = 10, units = "in", dpi = 600
+)
 
