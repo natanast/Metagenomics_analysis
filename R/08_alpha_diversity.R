@@ -10,6 +10,11 @@ library(data.table)
 library(stringr)
 library(vegan)
 
+library(ggplot2)
+library(ggpubr)
+library(ggforce)
+library(paletteer)
+
 
 # load data ------
 
@@ -95,9 +100,6 @@ fwrite(alpha, "alpha_diversity.csv")
 
 # plot ------
 
-library(ggplot2)
-library(ggpubr)
-
 alpha_long <- melt(alpha,
                    id.vars      = c("Sample", "Group"),
                    measure.vars = c("observed", "shannon", "simpson", "evenness"),
@@ -135,6 +137,7 @@ gr <- ggplot(alpha_long, aes(Group, value, fill = Group)) +
         plot.background = element_rect(fill = "transparent", color = NA),
         plot.margin = margin(20, 20, 20, 20)
     )
+
 
 ggsave(
     plot = gr, filename = "alpha_diversity.png",
