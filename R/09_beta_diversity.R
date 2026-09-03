@@ -71,6 +71,26 @@ ord <- data.table(
 ord <- merge(ord, d2, by = "Sample")
 
 
+# statistical testing -----
+
+# PERMANOVA (adonis2) tests whether group membership explains a
+# significant part of the variation in community composition, and
+# reports the proportion explained (R2).
+#
+# betadisper tests its assumption that within-group dispersion is
+# comparable across groups. A significant result means the groups
+# differ in how variable they are internally, which has to be reported
+# alongside the PERMANOVA rather than treated as invalidating it.
+
+d2_ord <- d2[match(rownames(mat), d2$Sample)]
+stopifnot(all(d2_ord$Sample == rownames(mat)))
+
+set.seed(42)
+adonis2(bc ~ Group, data = d2_ord, permutations = 999)
+
+permutest(betadisper(bc, factor(d2_ord$Group)))
+
+
 # plot -----
 
 gr2 <- ggplot(ord, aes(PC1, PC2, fill = Group)) +
@@ -112,7 +132,6 @@ gr2 <- ggplot(ord, aes(PC1, PC2, fill = Group)) +
         plot.margin = margin(20, 20, 20, 20)
     )
 
-gr2
 
 ggsave(plot = gr2, filename = "beta_diversity_pcoa.png",
        width = 10, height = 10, units = "in", dpi = 600)
