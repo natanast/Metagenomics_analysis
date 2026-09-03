@@ -11,9 +11,9 @@ library(stringr)
 library(vegan)
 
 library(ggplot2)
-# library(ggpubr)
-# library(ggforce)
 library(paletteer)
+library(ggrepel)
+library(ggforce)
 
 
 # load data ------
@@ -74,23 +74,45 @@ ord <- merge(ord, d2, by = "Sample")
 # plot -----
 
 gr2 <- ggplot(ord, aes(PC1, PC2, fill = Group)) +
-    geom_hline(yintercept = 0, linewidth = .3, linetype = "dashed", color = "grey60") +
-    geom_vline(xintercept = 0, linewidth = .3, linetype = "dashed", color = "grey60") +
-    geom_point(shape = 21, size = 5, stroke = .25, color = "black") +
-    ggrepel::geom_text_repel(aes(label = Sample), size = 3, show.legend = FALSE) +
+    
+    # geom_hline(yintercept = 0, linewidth = .3, linetype = "dashed", color = "grey60") +
+    # 
+    # geom_vline(xintercept = 0, linewidth = .3, linetype = "dashed", color = "grey60") +
+
+    geom_point(shape = 21, size = 4, stroke = .25, color = "black") +
+    
+    geom_mark_circle(
+        aes(fill = Group, color = Group, label = Group),
+        alpha = .1,
+        expand = unit(1.5, "mm")
+    ) +
+    
+    # geom_text_repel(aes(label = Sample), size = 3, show.legend = FALSE) +
+    
     scale_fill_manual(values = paletteer_d("ggthemes::Color_Blind")) +
-    labs(x = paste0("PCoA 1 (", var_expl[1], "%)"),
-         y = paste0("PCoA 2 (", var_expl[2], "%)")) +
+    scale_color_manual(values = paletteer_d("ggthemes::Color_Blind")) +
+    
+    
+    labs(
+        x = paste0("PCoA 1 (", var_expl[1], "%)"),
+        y = paste0("PCoA 2 (", var_expl[2], "%)")
+    ) +
+    
     theme_minimal() +
+    
     theme(
-        panel.border = element_rect(fill = NA, linewidth = .4),
-        panel.grid.major = element_line(linewidth = .55),
-        panel.grid.minor = element_line(linewidth = .45, linetype = "dashed"),
-        plot.background = element_rect(fill = "transparent", color = NA),
+        legend.position = "none",
+        
+        axis.text = element_text(size = 10, color = "grey30"),
+        axis.title = element_text(size = 12, color = "grey25"), 
+        
+        panel.grid.major = element_line(linewidth = .35, color = "grey93"),
+        panel.grid.minor = element_line(linewidth = .35, linetype = "dashed", color = "grey93"),
+        
         plot.margin = margin(20, 20, 20, 20)
     )
 
 gr2
 
 ggsave(plot = gr2, filename = "beta_diversity_pcoa.png",
-       width = 8, height = 7, units = "in", dpi = 600)
+       width = 10, height = 10, units = "in", dpi = 600)
