@@ -71,3 +71,26 @@ ord <- data.table(
 ord <- merge(ord, d2, by = "Sample")
 
 
+# plot -----
+
+gr2 <- ggplot(ord, aes(PC1, PC2, fill = Group)) +
+    geom_hline(yintercept = 0, linewidth = .3, linetype = "dashed", color = "grey60") +
+    geom_vline(xintercept = 0, linewidth = .3, linetype = "dashed", color = "grey60") +
+    geom_point(shape = 21, size = 5, stroke = .25, color = "black") +
+    ggrepel::geom_text_repel(aes(label = Sample), size = 3, show.legend = FALSE) +
+    scale_fill_manual(values = paletteer_d("ggthemes::Color_Blind")) +
+    labs(x = paste0("PCoA 1 (", var_expl[1], "%)"),
+         y = paste0("PCoA 2 (", var_expl[2], "%)")) +
+    theme_minimal() +
+    theme(
+        panel.border = element_rect(fill = NA, linewidth = .4),
+        panel.grid.major = element_line(linewidth = .55),
+        panel.grid.minor = element_line(linewidth = .45, linetype = "dashed"),
+        plot.background = element_rect(fill = "transparent", color = NA),
+        plot.margin = margin(20, 20, 20, 20)
+    )
+
+gr2
+
+ggsave(plot = gr2, filename = "beta_diversity_pcoa.png",
+       width = 8, height = 7, units = "in", dpi = 600)
