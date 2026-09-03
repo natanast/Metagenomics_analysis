@@ -53,5 +53,21 @@ mat <- t(mat)
 rel <- decostand(mat, method = "total")
 bc  <- vegdist(rel, method = "bray")
 
+# The distance matrix is projected into two dimensions so that samples
+# with similar composition appear close to each other.
+# PCoA is used
+
+pcoa <- cmdscale(bc, k = 2, eig = TRUE)
+
+# percentage of the total variation captured by each axis
+var_expl <- round(100 * pcoa$eig[1:2] / sum(pcoa$eig[pcoa$eig > 0]), 1)
+
+ord <- data.table(
+    Sample = rownames(mat),
+    PC1    = pcoa$points[, 1],
+    PC2    = pcoa$points[, 2]
+)
+
+ord <- merge(ord, d2, by = "Sample")
 
 
