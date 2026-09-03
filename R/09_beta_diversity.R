@@ -10,6 +10,11 @@ library(data.table)
 library(stringr)
 library(vegan)
 
+library(ggplot2)
+# library(ggpubr)
+# library(ggforce)
+library(paletteer)
+
 
 # load data ------
 
@@ -36,6 +41,17 @@ mat <- t(mat)
 
 # beta diversity -----
 
+# Between-sample diversity: how different the community composition is
+# between samples. 
+# 
+# Counts are converted to relative abundances first, so
+# that differences in sequencing depth do not drive the distances.
+# 
+# Bray-Curtis accounts for both which taxa are present and their relative
+# abundances, ranging from 0 (identical) to 1 (no taxa in common). 
+
+rel <- decostand(mat, method = "total")
+bc  <- vegdist(rel, method = "bray")
 
 
 
