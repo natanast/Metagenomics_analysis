@@ -56,3 +56,28 @@ comp <- rbind(comp, comp[, .(taxon = "Other",
 
 # plot -----
 
+gr3 <- ggplot(comp, aes(Sample, abundance, fill = taxon)) +
+    
+    geom_col(width = .75) +
+    
+    facet_grid(~ Group, scales = "free_x", space = "free_x") +
+    
+    scale_fill_manual(values = paletteer_d("ggthemes::Tableau_20")) +
+    scale_y_continuous(labels = scales::percent, expand = c(0, 0)) +
+    
+    labs(x = NULL, y = "Relative abundance", fill = NULL) +
+    
+    theme_minimal() +
+    
+    theme(
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+        legend.text = element_text(size = 8, face = "italic"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.margin = margin(20, 20, 20, 20)
+    )
+
+gr3
+
+ggsave(plot = gr3, filename = "composition_genus.png",
+       width = 12, height = 7, units = "in", dpi = 600)
