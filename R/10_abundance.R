@@ -77,7 +77,6 @@ gr3 <- ggplot(comp, aes(Sample, abundance, fill = taxon)) +
         plot.margin = margin(20, 20, 20, 20)
     )
 
-gr3
 
 ggsave(plot = gr3, filename = "composition_genus.png",
        width = 12, height = 7, units = "in", dpi = 600)
