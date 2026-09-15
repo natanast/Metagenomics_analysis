@@ -37,11 +37,21 @@ d2 = "sample_metadata.csv" |> fread()
 
 # clean data -----
 
+rel_g <- decostand(mat_g, method = "total")
+top   <- names(sort(colMeans(rel_g), decreasing = TRUE))[1:12]
 
+comp <- data.table(
+    Sample    = rep(rownames(rel_g), times = length(top)),
+    taxon     = rep(top, each = nrow(rel_g)),
+    abundance = as.vector(rel_g[, top])
+)
 
+comp <- merge(comp, d2, by = "Sample")
 
-# beta diversity -----
-
+# ό,τι δεν είναι στα top 12
+comp <- rbind(comp, comp[, .(taxon = "Other",
+                             abundance = 1 - sum(abundance)),
+                         by = .(Sample, Group)])
 
 
 # plot -----
