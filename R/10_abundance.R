@@ -46,10 +46,22 @@ mat_p <- load_bracken("abundance_table_phylum.tsv")
 dim(mat_g)
 dim(mat_p)
 
-# clean data -----
 
+# taxonomic composition -----
+# Alpha and beta diversity show whether the groups differ; this shows
+# in what. Counts are converted to relative abundances so that samples
+# sequenced at different depth are comparable.
 rel_g <- decostand(mat_g, method = "total")
+
+# Only a limited number of taxa can be distinguished by colour, so the
+# most abundant genera across all samples are selected and everything
+# else is aggregated into "Other" below.
 top   <- names(sort(colMeans(rel_g), decreasing = TRUE))[1:12]
+
+
+# proportion of the total composition covered by the selected genera
+sum(colMeans(rel_g)[top])
+
 
 comp <- data.table(
     Sample    = rep(rownames(rel_g), times = length(top)),
