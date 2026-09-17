@@ -63,6 +63,10 @@ top   <- names(sort(colMeans(rel_g), decreasing = TRUE))[1:12]
 sum(colMeans(rel_g)[top])
 
 
+# The matrix is reshaped into long format, one row per sample-taxon
+# pair, as required by ggplot. as.vector() unwinds the matrix column by
+# column, so the labels are repeated to match: the sample list as a
+# whole ("times"), each taxon name consecutively ("each").
 comp <- data.table(
     Sample    = rep(rownames(rel_g), times = length(top)),
     taxon     = rep(top, each = nrow(rel_g)),
@@ -71,10 +75,15 @@ comp <- data.table(
 
 comp <- merge(comp, d2, by = "Sample")
 
-# ό,τι δεν είναι στα top 12
-comp <- rbind(comp, comp[, .(taxon = "Other",
-                             abundance = 1 - sum(abundance)),
-                         by = .(Sample, Group)])
+# The selected genera do not account for the full composition of a
+# sample. The remainder is added as a single "Other" category, so that
+# every bar sums to 100% and no abundance is silently dropped.
+
+comp <- rbind(
+    comp,
+    comp[, .(taxon = "Other", abundance = 1 - sum(abundance)),
+         by = .(Sample, Group)]
+)
 
 
 # plot -----
