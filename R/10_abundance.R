@@ -18,33 +18,34 @@ library(ggforce)
 
 # load data ------
 
-d2 <- "sample_metadata.csv" |> fread()
+d <- "sample_metadata.csv" |> fread()
+x <- fread("abundance_table_genus.tsv")
 
 # Bracken output is read and reshaped into a matrix with samples as rows
 # and taxa as columns, as expected by vegan. Only the read count columns
 # are kept: the relative abundance columns are redundant, and the
 # annotation columns would coerce the matrix to character.
 
-load_bracken <- function(path) {
-    x <- fread(path)
-    x <- x[, c(1, 4:ncol(x)), with = FALSE]
-    idx <- colnames(x) |> str_detect("\\.bracken_num")
-    m <- as.matrix(x[, idx, with = FALSE])
-    rownames(m) <- x$name
-    colnames(m) <- colnames(m) |> str_split_i("\\_L001", 1)
-    t(m)
-}
+
+x <- x[, c(1, 4:ncol(x)), with = FALSE]
+
+idx <- colnames(x) |> str_detect("\\.bracken_num")
+
+mat_g <- as.matrix(x[, idx, with = FALSE])
+rownames(mat_g) <- x$name
+colnames(mat_g) <- colnames(mat_g) |> str_split_i("\\_L001", 1)
+mat_g <- t(mat_g)
 
 
 # The same data at three taxonomic levels: species for diversity metrics,
 # genus for composition plots, phylum for a high-level overview.
 
-mat_s <- load_bracken("abundance_table_species.tsv")
-mat_g <- load_bracken("abundance_table_genus.tsv")
+# mat_s <- load_bracken("abundance_table_species.tsv")
+# mat_g <- load_bracken("abundance_table_genus.tsv")
 mat_p <- load_bracken("abundance_table_phylum.tsv")
 
 dim(mat_g)
-dim(mat_p)
+# dim(mat_p)
 
 
 # taxonomic composition -----
@@ -73,7 +74,7 @@ comp <- data.table(
     abundance = as.vector(rel_g[, top])
 )
 
-comp <- merge(comp, d2, by = "Sample")
+comp <- merge(comp, d, by = "Sample")
 
 # The selected genera do not account for the full composition of a
 # sample. The remainder is added as a single "Other" category, so that
@@ -110,5 +111,5 @@ gr3 <- ggplot(comp, aes(Sample, abundance, fill = taxon)) +
     )
 
 
-ggsave(plot = gr3, filename = "composition_genus.png",
+ggsave(plot = gr3, filename = "abudance_plot.png",
        width = 12, height = 7, units = "in", dpi = 600)
