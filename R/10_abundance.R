@@ -18,6 +18,13 @@ library(ggforce)
 
 # load data ------
 
+d2 <- "sample_metadata.csv" |> fread()
+
+# Bracken output is read and reshaped into a matrix with samples as rows
+# and taxa as columns, as expected by vegan. Only the read count columns
+# are kept: the relative abundance columns are redundant, and the
+# annotation columns would coerce the matrix to character.
+
 load_bracken <- function(path) {
     x <- fread(path)
     x <- x[, c(1, 4:ncol(x)), with = FALSE]
@@ -28,12 +35,16 @@ load_bracken <- function(path) {
     t(m)
 }
 
+
+# The same data at three taxonomic levels: species for diversity metrics,
+# genus for composition plots, phylum for a high-level overview.
+
 mat_s <- load_bracken("abundance_table_species.tsv")
 mat_g <- load_bracken("abundance_table_genus.tsv")
 mat_p <- load_bracken("abundance_table_phylum.tsv")
 
-d2 = "sample_metadata.csv" |> fread()
-
+dim(mat_g)
+dim(mat_p)
 
 # clean data -----
 
