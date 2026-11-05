@@ -133,11 +133,6 @@ cat SampleList | while read line; do
 	printf ".sam"
 	printf "\n"
 
-#	printf "rm "
-#	printf "D_Host_clean/"
-#	printf $line
-#	printf ".bam"
-#	printf "\n"
 
 	# Step 5: kraken2 - bracken analysis    
 	printf "kraken2 --db /work_2/natanastas/ARENA/db/k2_standard_08/"
